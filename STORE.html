@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="pro1.css">
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+<style>
+    .body_main{
+        background-color: #8EC5FC;
+background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+ height: 100vh;
+    }
+   
+    
+    .list{
+        background-color: #2fdbe7;
+        margin-top: 3px;
+     
+        animation: 0.3s ease-in-out;
+        /* animation-name: slide; */
+    }
+    @keyframes slide{
+        form{
+            opacity: 1;
+            transform: rotateX(180deg) translateY(-10px);
+        }to{
+            opacity: 0;
+            transform: rotateX(0deg) translateY(0px);
+
+        }
+
+
+    }
+
+    .slideout{
+        transform: rotateX(90deg) translateY(-10px);
+        transition: 1s;   
+    }
+    .bi-trash-fill,.bi-pencil-square{
+        float: right;
+        margin-right: 10px;
+        background-color: #eff9fa;
+        border-radius:  60px;
+    }
+   
+</style>
+</head>
+<body>
+    <div class="body_main">
+    <section class="container w-25">
+        <div class="">
+            <div class="text-center p-4"><h4>Welcome </h4></div>
+            <div class=" d-flex ">
+                <input type="text" placeholder="Enter item" id="item" class="form-control " >
+                <button type="button" class="btn btn-outline-success" id="btn">Click
+                </button>
+            </div>
+            <div class=" " >
+                <ul id="item-list"  class=" container-lg  mt-3">
+                    <!-- <li class="mt-1 ">test</li> -->
+                   
+                </ul>
+            </div>
+
+        </div>
+    </section>
+    </div>
+
+  <script>
+    let items=document.getElementById("item")
+    let btn=document.getElementById('btn')
+    let list=document.getElementById('item-list')
+  let ElementsItems; 
+  let additemsarray=[];
+        function setitem(){
+           localStorage.setItem('items',JSON.stringify(additemsarray))
+        }
+        function getitem(){
+            if(localStorage.getItem('items')){
+         additemsarray =JSON.parse(localStorage.getItem('items'))
+         console.log(additemsarray);
+         buildui() 
+      
+            }else{
+                console.log("no data found");
+            }
+            
+        }
+
+        function buildui(){
+            list.textContent=""
+     
+
+
+additemsarray.forEach((event)=>{ 
+    let li=document.createElement('li')
+    let spanel=document.createElement('span')
+    li.appendChild(spanel)
+    spanel.innerText=event
+    li.style.cssText="animation-name: slide; "
+    //    li.style.marginTop="2px"
+        
+                        
+    //    li.style.cssText="width=100%;height=100%"
+           list.appendChild(li)
+//deleat
+       let trash=document.createElement('i')
+       trash.classList.add("bi", "bi-trash-fill")
+       li.appendChild(trash)
+//edit
+       let edit =document.createElement('i')
+       edit.classList.add('bi', 'bi-pencil-square')
+       li.appendChild(edit)
+
+       items.value=""
+       items.focus()
+       li.classList.add("list")
+
+})
+           
+        }
+
+    function addelement(){
+        ElementsItems=items.value
+        additemsarray.push(ElementsItems)
+       
+    setitem()
+    getitem()
+
+       }
+    // items.addEventListener('keyup',(e)=>{
+    //     if(e.keyCode===30){
+    //         console.log("h",e);
+    //     }
+    // })
+
+
+
+    function dlt(event){
+        console.log(event.target.classList);
+        if(event.target.classList[1]=="bi-trash-fill"){
+            let element=event.target.parentElement
+            console.log(element);
+
+            element.classList.add('slideout')
+            element.addEventListener('transitionend',function(){
+                console.log('transition compleated');
+                element.remove()
+            })
+            // element.remove()
+
+        }
+    }
+    list.addEventListener('click',function(event){
+            if(event.target.classList[1]=='bi-pencil-square'){
+             let editedvalue= prompt('please add new text')
+             console.log("editedvalue",editedvalue);
+             let element=event.target.parentElement
+             let spanelmnt=element.querySelector('span')
+             spanelmnt.innerText=editedvalue
+
+        
+                
+            }
+    })
+    
+
+
+   list.addEventListener('click',dlt)
+   btn.addEventListener("click",addelement)
+   getitem()
+
+  </script>
+
+</body>
+</html>
